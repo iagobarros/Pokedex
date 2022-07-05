@@ -1,5 +1,6 @@
 package com.iagobarros.pokedex.pokemonlist
 
+import android.widget.Space
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -175,5 +176,33 @@ fun PokedexEntry(
                     .fillMaxWidth()
             )
         }
+    }
+}
+
+@Composable
+fun PokedexRow(
+    rowIndex: Int,
+    entries: List<PokedexListEntry>,
+    navController: NavController
+) {
+    Column {
+        Row {
+            PokedexEntry(
+                entry = entries[rowIndex * 2],
+                navController = navController,
+                modifier = Modifier.weight(1f)
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            if(entries.size >= rowIndex * 2 + 2) {
+                PokedexEntry(
+                    entry = entries[rowIndex * 2 + 1],
+                    navController = navController,
+                    modifier = Modifier.weight(1f)
+                )
+            } else {
+                Spacer(modifier = Modifier.weight(1f))
+            }
+        }
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
