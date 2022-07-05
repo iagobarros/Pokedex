@@ -19,8 +19,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import androidx.navigation.NavController
 import com.iagobarros.pokedex.R
+import com.iagobarros.pokedex.data.models.PokedexListEntry
 
 @Composable
 fun PokemonListScreen(
@@ -92,4 +94,14 @@ fun SearchBar(
             )
         }
     }
+}
+
+@Composable
+fun PokedexEntry(
+    entry: PokedexListEntry,
+    navController: NavController,
+    modifier: Modifier = Modifier,
+    viewModel: PokemonListViewModel = hiltNavGraphViewModel()
+) {
+    val defaultDominantColor = MaterialTheme.colors.surface
 }
