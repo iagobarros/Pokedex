@@ -40,7 +40,7 @@ fun PokemonListScreen(
                     .align(CenterHorizontally)
             )
             SearchBar(
-                hint = "Search...",
+                hint = "Pesquise...",
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
