@@ -136,6 +136,21 @@ fun PokemonList(
             PokedexRow(rowIndex = it, entries = pokemonList, navController = navController)
         }
     }
+
+    Box(
+        contentAlignment = Center,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        if(isLoading) {
+            CircularProgressIndicator(color = MaterialTheme.colors.primary)
+        }
+        if(loadError.isNotEmpty()) {
+            RetrySection(error = loadError) {
+                viewModel.loadPokemonPaginated()
+            }
+        }
+    }
+
 }
 
 @Composable
