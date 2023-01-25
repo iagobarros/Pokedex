@@ -1,4 +1,4 @@
-package com.iagobarros.pokemondetail
+package com.iagobarros.pokedex.pokemondetail
 
 import androidx.lifecycle.ViewModel
 import com.iagobarros.pokedex.data.remote.responses.Pokemon
