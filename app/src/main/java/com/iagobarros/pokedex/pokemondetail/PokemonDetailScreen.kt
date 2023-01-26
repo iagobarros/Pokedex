@@ -1,6 +1,7 @@
 package com.iagobarros.pokedex.pokemondetail
 
 import androidx.compose.foundation.background
+import com.iagobarros.pokedex.R
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -16,6 +17,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.RecomposerInfo
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,6 +26,7 @@ import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -37,6 +40,7 @@ import com.iagobarros.pokedex.data.remote.responses.Type
 import com.iagobarros.pokedex.util.Resource
 import com.iagobarros.pokedex.util.parseTypeToColor
 import java.util.*
+import kotlin.math.round
 
 @Composable
 fun PokemonDetailScreen(
@@ -145,7 +149,11 @@ fun PokemonDetailStateWrapper(
 ) {
     when(pokemonInfo) {
         is Resource.Success -> {
-
+            PokemonDetailSection(
+                pokemonInfo = pokemonInfo.data!!,
+                modifier = modifier
+                    .offset(y = (-20).dp)
+            )
         }
         is Resource.Error -> {
             Text(
@@ -179,10 +187,14 @@ fun PokemonDetailSection(
         Text(
             text = "#${pokemonInfo.id} ${pokemonInfo.name.capitalize(Locale.ROOT)}",
             fontWeight = FontWeight.Bold,
+            fontSize = 30.sp,
             textAlign = TextAlign.Center,
             color = MaterialTheme.colors.onSurface
         )
-
+        PokemonTypeSection(types = pokemonInfo.types)
+        PokemonDetailDataSection(
+            pokemonWeight = pokemonInfo.weight,
+            pokemonHeight = pokemonInfo.height)
     }
 }
 
@@ -214,8 +226,37 @@ fun PokemonTypeSection(types: List<Type>) {
 }
 
 @Composable
-fun PokemonDetailDataSection() {
-
+fun PokemonDetailDataSection(
+    pokemonWeight: Int,
+    pokemonHeight: Int,
+    sectionHeight: Dp = 80.dp
+) {
+    val pokemonWeightInKg = remember {
+        round(pokemonWeight * 100f) / 1000f
+    }
+    val pokemonHeightInMeters = remember {
+        round(pokemonHeight * 100f) / 1000f
+    }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        PokemonDetailDataItem(
+            dataValue = pokemonWeightInKg,
+            dataUnit = "kg",
+            dataIcon = painterResource(id = R.drawable.ic_weight),
+            modifier = Modifier.weight(1f)
+        )
+        Spacer(modifier = Modifier
+            .size(1.dp, sectionHeight)
+            .background(Color.LightGray))
+        PokemonDetailDataItem(
+            dataValue = pokemonHeightInMeters,
+            dataUnit = "m",
+            dataIcon = painterResource(id = R.drawable.ic_height),
+            modifier = Modifier.weight(1f)
+        )
+    }
 }
 
 @Composable
