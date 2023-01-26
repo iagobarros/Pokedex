@@ -3,7 +3,10 @@ package com.iagobarros.pokedex.pokemondetail
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -17,15 +20,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltNavGraphViewModel
 import androidx.navigation.NavController
 import com.google.accompanist.coil.CoilImage
 import com.iagobarros.pokedex.data.remote.responses.Pokemon
+import com.iagobarros.pokedex.data.remote.responses.Type
 import com.iagobarros.pokedex.util.Resource
+import com.iagobarros.pokedex.util.parseTypeToColor
+import java.util.*
 
 @Composable
 fun PokemonDetailScreen(
@@ -149,5 +160,81 @@ fun PokemonDetailStateWrapper(
                 modifier = loadingModifier
             )
         }
+    }
+}
+
+@Composable
+fun PokemonDetailSection(
+    pokemonInfo: Pokemon,
+    modifier: Modifier = Modifier
+) {
+    val scrollState = rememberScrollState()
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+            .fillMaxSize()
+            .offset(y = 100.dp)
+            .verticalScroll(scrollState)
+    ) {
+        Text(
+            text = "#${pokemonInfo.id} ${pokemonInfo.name.capitalize(Locale.ROOT)}",
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colors.onSurface
+        )
+
+    }
+}
+
+@Composable
+fun PokemonTypeSection(types: List<Type>) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .padding(16.dp)
+    ) {
+        for(type in types) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 8.dp)
+                    .clip(CircleShape)
+                    .background(parseTypeToColor(type))
+                    .height(35.dp)
+            ) {
+                Text(
+                    text = type.type.name.capitalize(Locale.ROOT),
+                    color = Color.White,
+                    fontSize = 18.sp
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun PokemonDetailDataSection() {
+
+}
+
+@Composable
+fun PokemonDetailDataItem(
+    dataValue: Float,
+    dataUnit: String,
+    dataIcon: Painter,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = modifier
+    ) {
+        Icon(painter = dataIcon, contentDescription = null, tint = MaterialTheme.colors.onSurface)
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "$dataValue$dataUnit",
+            color = MaterialTheme.colors.onSurface
+        )
     }
 }
