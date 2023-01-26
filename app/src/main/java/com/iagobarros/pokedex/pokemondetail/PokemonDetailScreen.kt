@@ -35,6 +35,8 @@ import com.google.accompanist.coil.CoilImage
 import com.iagobarros.pokedex.data.remote.responses.Pokemon
 import com.iagobarros.pokedex.data.remote.responses.Type
 import com.iagobarros.pokedex.util.Resource
+import com.iagobarros.pokedex.util.parseStatToAbbr
+import com.iagobarros.pokedex.util.parseStatToColor
 import com.iagobarros.pokedex.util.parseTypeToColor
 import java.util.*
 import kotlin.math.round
@@ -191,7 +193,9 @@ fun PokemonDetailSection(
         PokemonTypeSection(types = pokemonInfo.types)
         PokemonDetailDataSection(
             pokemonWeight = pokemonInfo.weight,
-            pokemonHeight = pokemonInfo.height)
+            pokemonHeight = pokemonInfo.height
+        )
+        PokemonBaseStats(pokemonInfo = pokemonInfo)
     }
 }
 
@@ -308,7 +312,7 @@ fun PokemonStat(
             .height(height)
             .clip(CircleShape)
             .background(
-                if(isSystemInDarkTheme()) {
+                if (isSystemInDarkTheme()) {
                     Color(0xFF505050)
                 } else {
                     Color.LightGray
@@ -342,5 +346,29 @@ fun PokemonBaseStats(
     pokemonInfo: Pokemon,
     animDelayPerItem: Int = 100
 ) {
-    
+    val maxBaseStat = remember {
+        pokemonInfo.stats.maxOf { it.baseStat }
+    }
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text(
+            text = "Status:",
+            fontSize = 20.sp,
+            color = MaterialTheme.colors.onSurface
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+
+        for(i in pokemonInfo.stats.indices) {
+            val stat = pokemonInfo.stats[i]
+            PokemonStat(
+                statName = parseStatToAbbr(stat),
+                statValue = stat.baseStat,
+                statMaxValue = maxBaseStat,
+                statColor = parseStatToColor(stat),
+                animDelay = i * animDelayPerItem
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+    }
 }
